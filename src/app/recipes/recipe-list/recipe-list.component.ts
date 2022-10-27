@@ -8,7 +8,8 @@ import { Recipe } from '../recipe.model';
 })
 export class RecipeListComponent implements OnInit {
   recipes: Recipe[] = [ // after the colon just tells typescript what type of variable this is
-    new Recipe('A Test Recipe', 'This is simply a test', 'https://images.pexels.com/photos/9203735/pexels-photo-9203735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')
+    new Recipe('A Test Recipe', 'This is simply a test', 'https://images.pexels.com/photos/9203735/pexels-photo-9203735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'),
+    new Recipe('A Test Recipe', 'This is simply a test', 'https://images.pexels.com/photos/9203735/pexels-photo-9203735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'),
   ]; 
 
   constructor() { }
