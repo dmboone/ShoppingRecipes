@@ -1,9 +1,9 @@
-<app-header></app-header>
+<app-header (featureSelected)="onNavigate($event)"></app-header> <!-- grabs event info from header component, which we know is a string describing the feature -->
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <app-recipes></app-recipes>
-            <app-shopping-list></app-shopping-list>
+            <app-recipes *ngIf="loadedFeature === 'recipe'"></app-recipes> <!-- will show this component only if loadedFeature property from app component equals recipe -->
+            <app-shopping-list *ngIf="loadedFeature !== 'recipe'"></app-shopping-list> <!-- will show this component only if loadedFeature property from app component equals something other than recipe -->
         </div>
     </div>
 </div>
