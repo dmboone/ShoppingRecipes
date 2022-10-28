@@ -1,6 +1,7 @@
-<a 
+<a (click)="onSelected()"
     href="#" 
     class="list-group-item clearfix"> 
+    <!-- once item is clicked call onSelected method from the component -->
     <div class="pull-left">
         <h4 class="list-group-item-heading">{{ recipe.name }}</h4> <!-- these variables come from our array of Recipe objects -->
         <p class="list-group-item">{{ recipe.description }}</p>

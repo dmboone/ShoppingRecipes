@@ -6,8 +6,15 @@
 <hr>
 <div class="row">
     <div class="col-xs-12">
-        <app-recipe-item *ngFor="let recipeEl of recipes" [recipe]="recipeEl"></app-recipe-item> <!-- using ngFor to loop through each recipe; binding to the recipe found in
-                                                                                                recipe-item component ([recipe]) each recipe we loop through ("recipeEl") from 
-                                                                                                the array in recipe-list component -->
+        <app-recipe-item 
+        *ngFor="let recipeEl of recipes" 
+        [recipe]="recipeEl"
+        (recipeSelected)="onRecipeSelected(recipeEl)"
+        ></app-recipe-item> <!-- using ngFor to loop through each recipe; binding to the recipe found in
+                                recipe-item component ([recipe]) each recipe we loop through ("recipeEl") from 
+                                the array in recipe-list component
+                            
+                                once the recipeSelected event occurs from the recipe-item component, send another event 
+                                (recipeWasSelected) up to the next parent which would be recipes and pass recipe data (recipeEl)-->                                                   
     </div>
 </div>
