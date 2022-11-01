@@ -11,9 +11,15 @@ import { RecipeService } from './recipe.service';
 export class RecipesComponent implements OnInit {
   selectedRecipe: Recipe;
   
-  constructor() { }
+  constructor(private recipeService: RecipeService) { } // injects Recipe service; this ensures this parent (recipes) is referencing the same 
+                                                        // version of the recipes service as its children (recipe-list and recipe-item)
 
   ngOnInit(): void {
+    this.recipeService.recipeSelected
+      .subscribe( // subscribes to recipeSelected event from our recipe service
+        (recipe: Recipe) => { // when the event occurs grab recipe data from event and update selectedRecipe variable
+          this.selectedRecipe = recipe;
+        }
+      )
   }
-
 }

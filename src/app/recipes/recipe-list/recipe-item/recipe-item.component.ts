@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Recipe } from '../../recipe.model';
+import { RecipeService } from '../../recipe.service';
 
 @Component({
   selector: 'app-recipe-item',
@@ -8,14 +9,13 @@ import { Recipe } from '../../recipe.model';
 })
 export class RecipeItemComponent implements OnInit {
   @Input() recipe : Recipe; // is now bindable from outside (from our parent component, in this case recipe-list)
-  @Output() recipeSelected = new EventEmitter<void>(); // created our own event for when item has been clicked (recipeSelected); event can now be accessed by parent (recipe-list)
 
-  constructor() { }
+  constructor(private recipeService: RecipeService) { } // inject Recipe service
 
   ngOnInit(): void {
   }
 
   onSelected(){
-    this.recipeSelected.emit();
+    this.recipeService.recipeSelected.emit(this.recipe); // when recipe item is selected calls the event emitter from the Recipe service
   }
 }
