@@ -1,6 +1,6 @@
 <div class="row"> <!-- the string interpolation values you see here are coming from the ts file and it is receiving this info from the parent (recipes component)-->
     <div class="col-xs-12">
-        <img src="{{ recipe.imagePath }}" alt="{{ recipe.name }}" class="img-responsive" style="max-height: 250px">
+        <img src="{{ recipe.imagePath }}" alt="{{ recipe.name }}" class="img-responsive" style="height: 30rem; width: 30rem; object-fit: cover;">
     </div>
 </div>
 <div class="row">
@@ -31,6 +31,11 @@
 </div>
 <div class="row">
     <div class="col-xs-12">
-        Ingredients
+        <ul class="list-group">
+            <li class="list-group-item"
+                *ngFor="let ingredient of recipe.ingredients">
+                {{ ingredient.name }} - {{ ingredient.amount }}
+            </li>
+        </ul>
     </div>
 </div>
