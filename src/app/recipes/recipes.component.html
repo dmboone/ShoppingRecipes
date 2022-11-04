@@ -4,16 +4,6 @@
         </app-recipe-list>
     </div>
     <div class="col-md-7">
-        <app-recipe-detail
-            *ngIf="selectedRecipe; else infoText"
-            [recipe]="selectedRecipe"
-            > <!-- app-recipe-detail component only shows if selectedRecipe has data; 
-                    in other words if recipeWasSelected event from above occurs. Else goes to ng-template reference #infoText
-                    Will then bind selectedRecipe data from event to recipe variable in recipe-detail component
-                    in order to display unique info-->
-        </app-recipe-detail>
-        <ng-template #infoText> <!-- this will only show while recipeWasSelected event has not occured-->
-            <p>Please select a Recipe!</p>
-        </ng-template>
+        <router-outlet></router-outlet>
     </div>
 </div>

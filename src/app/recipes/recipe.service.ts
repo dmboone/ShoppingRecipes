@@ -33,6 +33,10 @@ export class RecipeService{
     return this.recipes.slice(); // the slice will return an exact copy rather than a direct reference!
   }
 
+  getRecipe(index: number){
+    return this.recipes[index]; // grabs a single recipe using the id from the route param as the index
+  }
+
   addIngredientsToShoppingList(ingredients: Ingredient[]){
     this.slService.addIngredients(ingredients);
   }
