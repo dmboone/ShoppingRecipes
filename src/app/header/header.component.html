@@ -9,7 +9,7 @@
         <div class="navbar-collapse" [class.collapse]="collapsed" (window:resize)="collapsed = true">
             <ul class="nav navbar-nav">
                 <li routerLinkActive="active"><a routerLink="/recipes">Recipes</a></li> <!-- router link active adds the class in the parenthesis when that specific router link is active -->
-                <li routerLink="active"><a routerLink="/shopping-list">Shopping List</a></li>
+                <li routerLinkActive="active"><a routerLink="/shopping-list">Shopping List</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown" appDropdown> <!-- adding our custom dropdown directive-->

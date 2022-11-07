@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from './shopping-list.service';
 
@@ -9,16 +10,21 @@ import { ShoppingListService } from './shopping-list.service';
 })
 export class ShoppingListComponent implements OnInit {
   ingredients: Ingredient[];
+  private igChangeSub: Subscription;
 
   constructor(private slService: ShoppingListService) { }
 
   ngOnInit(): void {
     this.ingredients = this.slService.getIngredients();
-    this.slService.ingredientsChanged // listens for ingredients changed event from the service
+    this.igChangeSub = this.slService.ingredientsChanged // listens for ingredients changed event from the service
       .subscribe(
         (ingredients: Ingredient[]) => { // will update the ingredients array displayed on the page in reaction to event
           this.ingredients = ingredients;
         }
       )
+  }
+
+  ngOnDestroy(){
+    this.igChangeSub.unsubscribe();
   }
 }
