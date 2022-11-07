@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Recipe } from '../recipe.model';
 import { RecipeService } from '../recipe.service';
 
@@ -10,9 +11,15 @@ import { RecipeService } from '../recipe.service';
 export class RecipeListComponent implements OnInit {
   recipes: Recipe[];
 
-  constructor(private recipeService: RecipeService) { } // inject Recipe service
+  constructor(private recipeService: RecipeService, // inject Recipe service
+              private router: Router, // inject router to switch path when clicking New Recipe button ('onNewRecipe' function below)
+              private route: ActivatedRoute) { } // need to inject ActivatedRoute so we can switch paths relative to our current route
 
   ngOnInit(): void {
     this.recipes = this.recipeService.getRecipes();
+  }
+
+  onNewRecipe(){
+    this.router.navigate(['new'], {relativeTo: this.route}); // relative route
   }
 }
