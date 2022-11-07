@@ -8,7 +8,8 @@ import { Recipe } from '../../recipe.model';
 })
 export class RecipeItemComponent implements OnInit {
   @Input() recipe : Recipe; // is now bindable from outside (from our parent component, in this case recipe-list)
-
+  @Input() index: number;
+  
   ngOnInit(): void {
   }
 }
