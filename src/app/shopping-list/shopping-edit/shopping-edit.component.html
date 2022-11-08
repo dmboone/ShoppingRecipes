@@ -33,7 +33,7 @@
                 <div class="col-xs-12">
                     <!-- the button with type submit will be the one that, when clicked, triggers the onAddItem function that has been bound to ngSubmit up above -->
                     <button [ngClass]="editMode ? 'btn-warning' : 'btn-success'" class="btn" type="submit" [disabled]="!f.valid">{{ editMode ? 'Update' : 'Add' }}</button>
-                    <button class="btn btn-danger" type="button">Delete</button>
+                    <button *ngIf="editMode" class="btn btn-danger" type="button" (click)="onDelete()">Delete</button>
                     <button class="btn btn-primary" type="button" (click)="onClear()">Clear</button>
                 </div>
             </div>

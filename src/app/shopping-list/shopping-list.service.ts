@@ -34,4 +34,9 @@ export class ShoppingListService{
         this.ingredients[index] = newIngredient;
         this.ingredientsChanged.next(this.ingredients.slice()); // uses the Subject to emit an event with the data being a new array with the updated ingredient
     }
+
+    deleteIngredient(index: number){
+        this.ingredients.splice(index, 1);
+        this.ingredientsChanged.next(this.ingredients.slice()); // uses the Subject to emit an event with the data being a new array without that ingredient
+    }
 }
