@@ -34,7 +34,7 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
       );
   }
 
-  onAddItem(form: NgForm){
+  onSubmit(form: NgForm){
     const value = form.value; // grabs values from form
     const newIngredient = new Ingredient(value.name, value.amount);
     if(this.editMode){ // if in edit mode call update ingredient
@@ -43,6 +43,8 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
     else{ // else just call add ingredient
       this.slService.addIngredient(newIngredient);
     }
+    this.editMode = false;
+    form.reset();
   }
 
   ngOnDestroy(): void { // make sure to unsubscribe from observable to avoid memory leaks
