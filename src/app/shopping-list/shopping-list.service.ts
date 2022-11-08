@@ -18,11 +18,20 @@ export class ShoppingListService{
         this.ingredientsChanged.next(this.ingredients.slice()); // send back a copy of the newly updated array as part of the event emit so that our shopping list can store the new data
     }
 
+    getIngredient(index: number){
+        return this.ingredients[index];
+    }
+
     addIngredients(ingredients: Ingredient[]){
         // for(let ingredient of ingredients){
         //     this.addIngredient(ingredient); // viable option but would emit event for every ingredient added
         // }
         this.ingredients.push(...ingredients); // can use the spread operator instead!
         this.ingredientsChanged.next(this.ingredients.slice()); // emit event and pass new ingredients array
+    }
+
+    updateIngredient(index: number, newIngredient: Ingredient){
+        this.ingredients[index] = newIngredient;
+        this.ingredientsChanged.next(this.ingredients.slice()); // uses the Subject to emit an event with the data being a new array with the updated ingredient
     }
 }
