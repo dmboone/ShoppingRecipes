@@ -9,7 +9,8 @@
                     id="name" 
                     class="form-control"
                     name="name"
-                    ngModel>
+                    ngModel
+                    required>
                 </div>
                 <div class="col-sm-2 form-group">
                     <label for="amount">Amount</label>
@@ -18,12 +19,18 @@
                     id="amount" 
                     class="form-control"
                     name="amount"
-                    ngModel>
+                    ngModel
+                    required
+                    pattern="^[1-9]+[0-9]*$"
+                    >
+                    <!-- pattern validator allows you to restrict input based on a regular expression -->
+                    <!-- in our case we're making sure that the number is greater than 0 -->
+                    <!-- when property binding to string can forgo brackets around pattern -->
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-12">
-                    <button class="btn btn-success" type="submit">Add</button> <!-- calls onAddItem method when button is clicked -->
+                    <button class="btn btn-success" type="submit" [disabled]="!f.valid">Add</button> <!-- calls onAddItem method when button is clicked -->
                     <button class="btn btn-danger" type="button">Delete</button>
                     <button class="btn btn-primary" type="button">Clear</button>
                 </div>
