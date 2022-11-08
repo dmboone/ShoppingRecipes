@@ -55,7 +55,8 @@
                     <div 
                     class="row" 
                     *ngFor="let ingredientCtrl of controls; let i = index"
-                    [formGroupName]="i"> <!-- the name of this form group will correspond to the index at which a specific ingredient is found in the array-->
+                    [formGroupName]="i"
+                    style="margin-top: 10px"> <!-- the name for formGroupName will correspond to the index at which a specific ingredient is found in the array-->
                         <div class="col-xs-8">
                             <input 
                             type="text" 
@@ -70,6 +71,13 @@
                         </div>
                         <div class="col-xs-2">
                             <button class="btn btn-danger">X</button>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <!-- make sure to add type="button" so that it doesn't submit the entire form when clicking -->
+                            <button type="button" class="btn btn-success" (click)="onAddIngredient()">Add Ingredient</button>
                         </div>
                     </div>
                 </div>
