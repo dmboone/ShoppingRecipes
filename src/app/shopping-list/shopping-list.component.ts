@@ -24,6 +24,12 @@ export class ShoppingListComponent implements OnInit {
       )
   }
 
+  onEditItem(index: number){
+    this.slService.startedEditing.next(index); // startingEditing is a Subject so we can treat it like an observable and emit 
+                                              // event information; in this case we emit the index in the array where
+                                              // the specific ingredient that is being edited is located
+  }
+
   ngOnDestroy(){
     this.igChangeSub.unsubscribe();
   }

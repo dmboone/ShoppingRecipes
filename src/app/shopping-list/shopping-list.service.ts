@@ -3,6 +3,7 @@ import { Ingredient } from "../shared/ingredient.model";
 
 export class ShoppingListService{
     ingredientsChanged = new Subject<Ingredient[]>(); // creates a Subject
+    startedEditing = new Subject<number>(); // creates a Subject so that we can also access this from the shopping-edit component
     private ingredients: Ingredient[] = [
         new Ingredient('Apples', 5),
         new Ingredient('Tomatoes', 10),
