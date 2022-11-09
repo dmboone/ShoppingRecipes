@@ -28,13 +28,15 @@
                         type="text" 
                         id="imagePath"
                         formControlName="imagePath"
-                        class="form-control">
+                        class="form-control"
+                        #imagePath>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-12">
-                    <img src="" alt="" class="img-responsive">
+                    <!-- here we are binding the image source to the imagePath -->
+                    <img [src]="imagePath.value" class="img-responsive">
                 </div>
             </div>
             <div class="row">
@@ -46,7 +48,8 @@
                         id="description"
                         class="form-control"
                         formControlName="description"
-                        rows="6"></textarea>
+                        rows="6"
+                        #description></textarea>
                     </div>
                 </div>
             </div>
