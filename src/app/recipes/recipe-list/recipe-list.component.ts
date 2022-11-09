@@ -16,6 +16,12 @@ export class RecipeListComponent implements OnInit {
               private route: ActivatedRoute) { } // need to inject ActivatedRoute so we can switch paths relative to our current route
 
   ngOnInit(): void {
+    this.recipeService.recipesChanged
+      .subscribe( // listen for if the list of recipes has changed
+        (recipes: Recipe[]) => {
+          this.recipes = recipes; // then update recipes array
+        }
+      );
     this.recipes = this.recipeService.getRecipes();
   }
 
