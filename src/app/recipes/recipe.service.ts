@@ -50,5 +50,10 @@ export class RecipeService{
     this.recipes[index] = newRecipe;
     this.recipesChanged.next(this.recipes.slice()); // emits event that recipes has changed and sends event data (the new array of recipes)
   }
+
+  deleteRecipe(index: number){
+    this.recipes.splice(index, 1); // remove from array
+    this.recipesChanged.next(this.recipes.slice()); // emits event that recipes has changed and sends event data (the new array of recipes)
+  }
 }
 
