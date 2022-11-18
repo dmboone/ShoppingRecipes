@@ -29,6 +29,11 @@ export class RecipeService{
 
   constructor(private slService: ShoppingListService){}
 
+  setRecipes(recipes: Recipe[]){
+    this.recipes = recipes;
+    this.recipesChanged.next(this.recipes.slice()); // emits event that recipes has changed and sends event data (the new array of recipes)
+  }
+
   getRecipes(){
     return this.recipes.slice(); // the slice will return an exact copy rather than a direct reference!
   }

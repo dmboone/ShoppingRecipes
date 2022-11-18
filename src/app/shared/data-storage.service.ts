@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { RecipeService } from "../recipes/recipe.service";
+import { Recipe } from "../recipes/recipe.model";
 
 @Injectable({providedIn: 'root'}) // always need to add this if you are going to inject a service
 // can either list the service under providers in app module or do what we do above by adding {providedIn: 'root'} to the Injectable
@@ -25,5 +26,12 @@ export class DataStorageService{
                                     // like show a loader or something, but not needed here so we just subscribe right here
                 console.log(response); // just printing out the response
             });
+    }
+
+    fetchRecipes(){
+        this.http.get<Recipe[]>('https://shoppingrecipes-b163e-default-rtdb.firebaseio.com/recipes.json') // specify the type to avoid any typescript errors so the setRecipes method knows what type it's taking in
+            .subscribe(response => {
+                this.recipeService.setRecipes(response);
+            })
     }
 }
