@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { RecipeService } from "../recipes/recipe.service";
 import { Recipe } from "../recipes/recipe.model";
-import { map } from "rxjs/operators";
+import { map, tap } from "rxjs/operators";
 
 @Injectable({providedIn: 'root'}) // always need to add this if you are going to inject a service
 // can either list the service under providers in app module or do what we do above by adding {providedIn: 'root'} to the Injectable
@@ -30,15 +30,17 @@ export class DataStorageService{
     }
 
     fetchRecipes(){
-        this.http.get<Recipe[]>('https://shoppingrecipes-b163e-default-rtdb.firebaseio.com/recipes.json') // specify the type to avoid any typescript errors so the setRecipes method knows what type it's taking in
-            .pipe(map(recipes => { // we will use the map operator here to alter the data that we grab to make sure that even if a recipe has no ingredients, we give it an empty ingredients array to avoid bugs
-                return recipes.map(recipe => { // for every recipe in the recipe array...
-                    return {...recipe, ingredients: recipe.ingredients ? recipe.ingredients : []} // create a new recipe object with everything currently inside using the sspread operator (...) and then attach to the ingredients and return this new recipe object
-                    // but for the ingredients we check to see if the recipe already has an ingredients array, if so, we set it to the ingredients property and if not we set it to an empty array
-                }); // map here means something different here; this is a javascript array method that allows us to transform the elements in the array
-            }))
-            .subscribe(response => {
-                this.recipeService.setRecipes(response);
-            })
+        return this.http.get<Recipe[]>('https://shoppingrecipes-b163e-default-rtdb.firebaseio.com/recipes.json') // specify the type to avoid any typescript errors so the setRecipes method knows what type it's taking in
+            .pipe(
+                map(recipes => { // we will use the map operator here to alter the data that we grab to make sure that even if a recipe has no ingredients, we give it an empty ingredients array to avoid bugs
+                    return recipes.map(recipe => { // for every recipe in the recipe array...
+                        return {...recipe, ingredients: recipe.ingredients ? recipe.ingredients : []} // create a new recipe object with everything currently inside using the sspread operator (...) and then attach to the ingredients and return this new recipe object
+                        // but for the ingredients we check to see if the recipe already has an ingredients array, if so, we set it to the ingredients property and if not we set it to an empty array
+                    }); // map here means something different here; this is a javascript array method that allows us to transform the elements in the array
+                }),
+                tap(recipes => { // allows us to execute some code here in place with altering the data
+                    this.recipeService.setRecipes(recipes);
+                }) // we will now subscribe in the header component instead
+            )
     }
 }
