@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError } from "rxjs/operators";
 import { throwError } from 'rxjs';
@@ -26,22 +26,7 @@ export class AuthService{
                 returnSecureToken: true
             }
         )
-        .pipe(catchError(errorRes => { // pipe to handle error response
-            let errorMessage = 'An unknown error occured!'; // default error message
-
-            if(!errorRes.error || !errorRes.error.error){ // checks if error format is different than expected
-                return throwError(errorMessage);
-            }
-
-            switch(errorRes.error.error.message){ // switch to check for cases in which we can deliver a more specific error message
-                case 'EMAIL_EXISTS':
-                    errorMessage = 'This email exists already';
-            }
-
-            return throwError(errorMessage);
-        }
-        ))
-        ;
+        .pipe(catchError(this.handleError)); // pipe to handle error response
     }
 
     login(email: string, password: string){
@@ -51,5 +36,28 @@ export class AuthService{
             password: password,
             returnSecureToken: true
         })
+        .pipe(catchError(this.handleError)); // pipe to handle error response
+    }
+
+    private handleError(errorRes: HttpErrorResponse){ // we defined how to handle the error here in one place since we will reuse this for both login and signup
+        let errorMessage = 'An unknown error occured!'; // default error message
+
+            if(!errorRes.error || !errorRes.error.error){ // checks if error format is different than expected
+                return throwError(errorMessage);
+            }
+
+            switch(errorRes.error.error.message){ // switch to check for cases in which we can deliver a more specific error message
+                case 'EMAIL_EXISTS':
+                    errorMessage = 'This email exists already';
+                    break;
+                case 'EMAIL_NOT_FOUND':
+                    errorMessage = 'This email does not exist';
+                    break;
+                case 'INVALID_PASSWORD':
+                    errorMessage = 'This password is not correct';
+                    break;
+            }
+
+            return throwError(errorMessage);
     }
 }

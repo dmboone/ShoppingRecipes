@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import {Component} from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
