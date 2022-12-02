@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { onErrorResumeNext } from 'rxjs-compat/operator/onErrorResumeNext';
-import { AuthService } from './auth.service';
+import { Observable } from 'rxjs';
+import { AuthResponseData, AuthService } from './auth.service';
 
 @Component({
     selector: 'app-auth',
@@ -25,25 +25,29 @@ export class AuthComponent{
         const email = form.value.email;
         const password = form.value.password;
 
+        let authObs: Observable<AuthResponseData>; // this allows us to not have to repeat ourselves since we handle the observable the exact same
+                                                    // way in both login mode and signup mode
+
         this.isLoading = true;
-        if(this.isLoginMode){
-            // ..
+        if(this.isLoginMode){ // confirms we are logging in
+            authObs = this.authService.login(email, password);
         }
-        else{ // not logged in so need so run signup method
-            this.authService.signup(email, password)
-            .subscribe(
-                resData =>{
-                    console.log(resData);
-                    this.isLoading = false;
-                },
-                errorMessage => // specifics of errorMessage is now getting handled in the auth.service through a catchError pipe
-                {
-                    console.log(errorMessage);
-                    this.error = errorMessage;
-                    this.isLoading = false;
-                }            
-            );
+        else{ // not logging in so need so run signup method
+            authObs = this.authService.signup(email, password);
         }
+
+        authObs.subscribe( // subscribe to the authentication observable whether we are in logging in or signing up
+            resData =>{
+                console.log(resData);
+                this.isLoading = false;
+            },
+            errorMessage => // specifics of errorMessage is now getting handled in the auth.service through a catchError pipe
+            {
+                console.log(errorMessage);
+                this.error = errorMessage;
+                this.isLoading = false;
+            }
+        );
 
         form.reset(); // always reset form on submission
     }

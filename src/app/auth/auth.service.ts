@@ -3,13 +3,14 @@ import { Injectable } from "@angular/core";
 import { catchError } from "rxjs/operators";
 import { throwError } from 'rxjs';
 
-interface AuthResponseData{ // defining the firebase sign up response
+export interface AuthResponseData{ // defining the firebase sign up response; we export this so we can use it in the auth component as well
     kind: string;
     idToken: string;
     email: string;
     refreshToken: string;
     expiresIn: string;
     localId: string;
+    registered?: boolean; // this is an optional field because the signup request does not provide this but the login request does
 }
 
 @Injectable({providedIn: 'root'})
@@ -41,5 +42,14 @@ export class AuthService{
         }
         ))
         ;
+    }
+
+    login(email: string, password: string){
+        return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDBvaFptcTa6_gKPCl9OLsGS3sWEIrfdSo', 
+        {
+            email: email,
+            password: password,
+            returnSecureToken: true
+        })
     }
 }
