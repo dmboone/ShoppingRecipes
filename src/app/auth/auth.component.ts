@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { onErrorResumeNext } from 'rxjs-compat/operator/onErrorResumeNext';
 import { AuthService } from './auth.service';
 
 @Component({
@@ -35,10 +36,10 @@ export class AuthComponent{
                     console.log(resData);
                     this.isLoading = false;
                 },
-                error =>
+                errorMessage => // specifics of errorMessage is now getting handled in the auth.service through a catchError pipe
                 {
-                    console.log(error);
-                    this.error = 'An error occured'!;
+                    console.log(errorMessage);
+                    this.error = errorMessage;
                     this.isLoading = false;
                 }            
             );

@@ -1,5 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { catchError } from "rxjs/operators";
+import { throwError } from 'rxjs';
 
 interface AuthResponseData{ // defining the firebase sign up response
     kind: string;
@@ -22,6 +24,22 @@ export class AuthService{
                 password: password,
                 returnSecureToken: true
             }
-        );
+        )
+        .pipe(catchError(errorRes => { // pipe to handle error response
+            let errorMessage = 'An unknown error occured!'; // default error message
+
+            if(!errorRes.error || !errorRes.error.error){ // checks if error format is different than expected
+                return throwError(errorMessage);
+            }
+
+            switch(errorRes.error.error.message){ // switch to check for cases in which we can deliver a more specific error message
+                case 'EMAIL_EXISTS':
+                    errorMessage = 'This email exists already';
+            }
+
+            return throwError(errorMessage);
+        }
+        ))
+        ;
     }
 }
