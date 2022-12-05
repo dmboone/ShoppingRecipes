@@ -1,7 +1,8 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { catchError } from "rxjs/operators";
-import { throwError } from 'rxjs';
+import { catchError, tap } from "rxjs/operators";
+import { Subject, throwError } from 'rxjs';
+import { User } from "./user.model";
 
 export interface AuthResponseData{ // defining the firebase sign up response; we export this so we can use it in the auth component as well
     kind: string;
@@ -15,6 +16,9 @@ export interface AuthResponseData{ // defining the firebase sign up response; we
 
 @Injectable({providedIn: 'root'})
 export class AuthService{
+
+    user = new Subject<User>();
+
     constructor(private http: HttpClient){}
 
     signup(email: string, password: string){ // post request using firebase authentication api which requires specific fields as seen below
@@ -26,17 +30,34 @@ export class AuthService{
                 returnSecureToken: true
             }
         )
-        .pipe(catchError(this.handleError)); // pipe to handle error response
+        .pipe(
+            catchError(this.handleError), // pipe to handle error response
+            tap(resData => { // pipe to create user model from signup response data
+                this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn);
+            })
+        ); 
     }
 
     login(email: string, password: string){
         return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDBvaFptcTa6_gKPCl9OLsGS3sWEIrfdSo', 
-        {
-            email: email,
-            password: password,
-            returnSecureToken: true
-        })
-        .pipe(catchError(this.handleError)); // pipe to handle error response
+            {
+                email: email,
+                password: password,
+                returnSecureToken: true
+            }
+        )
+        .pipe(
+            catchError(this.handleError), // pipe to handle error response
+            tap(resData => { // pipe to create user model from login response data
+                this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn);
+            })
+        );
+    }
+
+    private handleAuthentication(email: string, userId: string, token: string, expiresIn: number){ // we define how to handle authentication here in one place since we will reuse this for both login and signup
+        const expirationDate = new Date(new Date().getTime() + expiresIn * 1000); // calculating the time at which the user token will expire
+        const user = new User(email, userId, token, expirationDate); // creating a user based on the model we defined in user.model.ts
+        this.user.next(user); // use subject to emit this as our now currently logged in user
     }
 
     private handleError(errorRes: HttpErrorResponse){ // we defined how to handle the error here in one place since we will reuse this for both login and signup
