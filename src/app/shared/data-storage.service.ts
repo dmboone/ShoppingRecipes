@@ -30,26 +30,21 @@ export class DataStorageService{
             });
     }
 
-    fetchRecipes(){
-        return this.authService.user.pipe(
-            take(1), // take operator allows us to only take one value from that observable and then automatically unsubscribe
-            exhaustMap( user => { // exhaustMap waits for first observable (take) to complete, gives us that data, and then replaces that observable with the next observable (http request) and uses the other rxjs operators
-                return this.http.get<Recipe[]>( // specify the type (Recipe[]) to avoid any typescript errors so the setRecipes method knows what type it's taking in 
-                    'https://shoppingrecipes-b163e-default-rtdb.firebaseio.com/recipes.json',
-                    {
-                        params: new HttpParams().set('auth', user.token) // add query param to http request containing user token for authentication as required by firebase
-                    }
-                ); 
-            }),
-            map(recipes => { // we will use the map operator here to alter the data that we grab to make sure that even if a recipe has no ingredients, we give it an empty ingredients array to avoid bugs
-                return recipes.map(recipe => { // for every recipe in the recipe array...
-                    return {...recipe, ingredients: recipe.ingredients ? recipe.ingredients : []} // create a new recipe object with everything currently inside using the sspread operator (...) and then attach to the ingredients and return this new recipe object
-                    // but for the ingredients we check to see if the recipe already has an ingredients array, if so, we set it to the ingredients property and if not we set it to an empty array
-                }); // map here means something different here; this is a javascript array method that allows us to transform the elements in the array
-            }),
-            tap(recipes => { // allows us to execute some code here in place with altering the data
-                this.recipeService.setRecipes(recipes);
-            }) // we will now subscribe in the header component instead
-        );
+    fetchRecipes(){      
+            return this.http.get<Recipe[]>// specify the type (Recipe[]) to avoid any typescript errors so the setRecipes method knows what type it's taking in 
+            ( 
+                'https://shoppingrecipes-b163e-default-rtdb.firebaseio.com/recipes.json'
+            )
+            .pipe(
+                map(recipes => { // we will use the map operator here to alter the data that we grab to make sure that even if a recipe has no ingredients, we give it an empty ingredients array to avoid bugs
+                    return recipes.map(recipe => { // for every recipe in the recipe array...
+                        return {...recipe, ingredients: recipe.ingredients ? recipe.ingredients : []} // create a new recipe object with everything currently inside using the sspread operator (...) and then attach to the ingredients and return this new recipe object
+                        // but for the ingredients we check to see if the recipe already has an ingredients array, if so, we set it to the ingredients property and if not we set it to an empty array
+                    }); // map here means something different here; this is a javascript array method that allows us to transform the elements in the array
+                }),
+                tap(recipes => { // allows us to execute some code here in place with altering the data
+                    this.recipeService.setRecipes(recipes);
+                }) // we will now subscribe in the header component instead
+            );
     }
 }
