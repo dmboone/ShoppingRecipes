@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, tap } from "rxjs/operators";
-import { Subject, throwError } from 'rxjs';
+import { BehaviorSubject, throwError } from 'rxjs';
 import { User } from "./user.model";
 
 export interface AuthResponseData{ // defining the firebase sign up response; we export this so we can use it in the auth component as well
@@ -17,7 +17,7 @@ export interface AuthResponseData{ // defining the firebase sign up response; we
 @Injectable({providedIn: 'root'})
 export class AuthService{
 
-    user = new Subject<User>();
+    user = new BehaviorSubject<User>(null); // can get access to the currently active user even if we only subscribe after the user has been emitted
 
     constructor(private http: HttpClient){}
 
