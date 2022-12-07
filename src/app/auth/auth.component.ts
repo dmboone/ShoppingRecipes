@@ -54,4 +54,8 @@ export class AuthComponent{
 
         form.reset(); // always reset form on submission
     }
+
+    onHandleError(){
+        this.error = null;
+    }
 }
