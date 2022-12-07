@@ -7,6 +7,10 @@
 
         <!-- ngif alert modal -->
         <!-- <app-alert [message]="error" *ngIf="error" (close)="onHandleError()"></app-alert> -->
+
+        <!-- programmatic creation of alert modal -->
+        <ng-template appPlaceholder> <!-- appPlaceholder is a placeholder directive so we know where to programmatically add the modal component -->
+        </ng-template>
         <div *ngIf="isLoading" style="text-align: center">
             <app-loading-spinner></app-loading-spinner>
         </div>
