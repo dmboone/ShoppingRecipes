@@ -55,6 +55,26 @@ export class AuthService{
         );
     }
 
+    autoLogin(){
+        const userData: {
+            email: string;
+            id: string;
+            _token: string;
+            _tokenExpirationDate: string;
+        } = JSON.parse(localStorage.getItem('userData'));
+
+        if(!userData){
+            return;
+        }
+        else{
+            const loadedUser = new User(userData.email, userData.id, userData._token, new Date(userData._tokenExpirationDate));
+
+            if(loadedUser.token){
+                this.user.next(loadedUser);
+            }
+        }
+    }
+
     logout(){
        this.user.next(null); // sets user back to null
        this.router.navigate(['/auth']);
@@ -64,6 +84,7 @@ export class AuthService{
         const expirationDate = new Date(new Date().getTime() + expiresIn * 1000); // calculating the time at which the user token will expire
         const user = new User(email, userId, token, expirationDate); // creating a user based on the model we defined in user.model.ts
         this.user.next(user); // use subject to emit this as our now currently logged in user
+        localStorage.setItem('userData', JSON.stringify(user)); // saving user info to local storage so that you can refresh without being logged out
     }
 
     private handleError(errorRes: HttpErrorResponse){ // we defined how to handle the error here in one place since we will reuse this for both login and signup
