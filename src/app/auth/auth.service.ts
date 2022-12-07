@@ -19,6 +19,7 @@ export interface AuthResponseData{ // defining the firebase sign up response; we
 export class AuthService{
 
     user = new BehaviorSubject<User>(null); // can get access to the currently active user even if we only subscribe after the user has been emitted
+    private tokenExpirationTimer: any;
 
     constructor(private http: HttpClient, private router: Router){}
 
@@ -71,6 +72,8 @@ export class AuthService{
 
             if(loadedUser.token){
                 this.user.next(loadedUser);
+                const expirationDuration = new Date(userData._tokenExpirationDate).getTime() - new Date().getTime();
+                this.autoLogout(expirationDuration);
             }
         }
     }
@@ -78,12 +81,24 @@ export class AuthService{
     logout(){
        this.user.next(null); // sets user back to null
        this.router.navigate(['/auth']);
+       localStorage.removeItem('userData');
+       if(this.tokenExpirationTimer){ // if a timer is already running when user clicks logout
+        clearTimeout(this.tokenExpirationTimer); // clears it
+       }
+       this.tokenExpirationTimer = null; // resets it for the next login session
+    }
+
+    autoLogout(expirationDuration: number){
+        this.tokenExpirationTimer = setTimeout(()=>{ // logs out after the expiration duration has passed
+            this.logout();
+        }, expirationDuration);
     }
 
     private handleAuthentication(email: string, userId: string, token: string, expiresIn: number){ // we define how to handle authentication here in one place since we will reuse this for both login and signup
         const expirationDate = new Date(new Date().getTime() + expiresIn * 1000); // calculating the time at which the user token will expire
         const user = new User(email, userId, token, expirationDate); // creating a user based on the model we defined in user.model.ts
         this.user.next(user); // use subject to emit this as our now currently logged in user
+        this.autoLogout(expiresIn * 1000); //converts to milliseconds
         localStorage.setItem('userData', JSON.stringify(user)); // saving user info to local storage so that you can refresh without being logged out
     }
 
