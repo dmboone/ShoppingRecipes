@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthComponent } from './auth/auth.component';
+import { AuthGuard } from './auth/auth.guard';
 import { RecipeDetailComponent } from './recipes/recipe-detail/recipe-detail.component';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
@@ -13,6 +14,7 @@ const appRoutes: Routes = [
     {
         path: 'recipes', 
         component: RecipesComponent, 
+        canActivate: [AuthGuard],
         children: [ // these children will all have /recipes in front of it
             {path: '', component: RecipeStartComponent},
             {path: 'new', component: RecipeEditComponent}, // new should come before dynamic id path! otherwise angular will try to parse the word 'new' as an id rather than simply 'new' which is a predefined path
