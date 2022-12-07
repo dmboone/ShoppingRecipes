@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { catchError, tap } from "rxjs/operators";
 import { BehaviorSubject, throwError } from 'rxjs';
 import { User } from "./user.model";
+import { Router } from "@angular/router";
 
 export interface AuthResponseData{ // defining the firebase sign up response; we export this so we can use it in the auth component as well
     kind: string;
@@ -19,7 +20,7 @@ export class AuthService{
 
     user = new BehaviorSubject<User>(null); // can get access to the currently active user even if we only subscribe after the user has been emitted
 
-    constructor(private http: HttpClient){}
+    constructor(private http: HttpClient, private router: Router){}
 
     signup(email: string, password: string){ // post request using firebase authentication api which requires specific fields as seen below
         return this.http.post<AuthResponseData>( // <> tells Typescript that the response will be of type AuthResponseData, which we have defined in the interface above
@@ -52,6 +53,11 @@ export class AuthService{
                 this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn);
             })
         );
+    }
+
+    logout(){
+       this.user.next(null); // sets user back to null
+       this.router.navigate(['/auth']);
     }
 
     private handleAuthentication(email: string, userId: string, token: string, expiresIn: number){ // we define how to handle authentication here in one place since we will reuse this for both login and signup
