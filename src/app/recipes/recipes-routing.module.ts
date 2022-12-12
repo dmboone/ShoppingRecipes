@@ -13,7 +13,7 @@ const routes: Routes = [
         component: RecipesComponent, 
         canActivate: [AuthGuard],
         children: [ // these children will all have /recipes in front of it
-            {path: '', component: RecipeStartComponent},
+            {path: '', component: RecipeStartComponent}, // must change to empty path when implementing lazy loading; path is instead shown in app-routing.module file
             {path: 'new', component: RecipeEditComponent}, // new should come before dynamic id path! otherwise angular will try to parse the word 'new' as an id rather than simply 'new' which is a predefined path
             {
                 path: ':id', 
