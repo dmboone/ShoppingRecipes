@@ -4,6 +4,7 @@ import { catchError, tap } from "rxjs/operators";
 import { BehaviorSubject, throwError } from 'rxjs';
 import { User } from "./user.model";
 import { Router } from "@angular/router";
+import { environment } from '../../environments/environment';
 
 export interface AuthResponseData{ // defining the firebase sign up response; we export this so we can use it in the auth component as well
     kind: string;
@@ -25,7 +26,7 @@ export class AuthService{
 
     signup(email: string, password: string){ // post request using firebase authentication api which requires specific fields as seen below
         return this.http.post<AuthResponseData>( // <> tells Typescript that the response will be of type AuthResponseData, which we have defined in the interface above
-            'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDBvaFptcTa6_gKPCl9OLsGS3sWEIrfdSo', // this is the endpoint for the signup feature of firebase's authentication api
+            'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + environment.firebaseAPIKey, // this is the endpoint for the signup feature of firebase's authentication api
             { // firebase requires us to provide this information when making a post request to their authentication api for sign up
                 email: email,
                 password: password,
@@ -41,7 +42,7 @@ export class AuthService{
     }
 
     login(email: string, password: string){
-        return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDBvaFptcTa6_gKPCl9OLsGS3sWEIrfdSo', 
+        return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + environment.firebaseAPIKey, 
             {
                 email: email,
                 password: password,
